@@ -1,4 +1,4 @@
-import { IUserResponse, User } from "../../utils/types/userTypes";
+import { IUserResponse, Roles, User } from "../../utils/types/userTypes";
 import { getHeaderOptions } from "../../utils/utils";
 import routes from "../config";
 import { api } from "../config/axiosConfig";
@@ -23,6 +23,12 @@ const registerPartner = async (data: User): Promise<Response> => {
   return response.data;
 };
 
+const registerUser = async (data: User, role: Roles): Promise<Response> => {
+  if (role === "partner") return registerPartner(data);
+
+  return registerResearcher(data);
+};
+
 const getUsers = async (token: string): Promise<IUserResponse> => {
   const response = await api.get<IUserResponse>(
     routes.USER.GET_USERS(),
@@ -32,4 +38,5 @@ const getUsers = async (token: string): Promise<IUserResponse> => {
   return response.data;
 };
 
-export { getUsers, registerPartner, registerResearcher };
+export { getUsers, registerPartner, registerResearcher, registerUser };
+

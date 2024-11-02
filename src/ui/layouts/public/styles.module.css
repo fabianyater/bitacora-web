@@ -1,0 +1,51 @@
+.container {
+  background-image: url("/src/assets/freepik__enhance__43946.png");
+  box-sizing: border-box;
+  width: 100%;
+  /* height: 100vh; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 auto;
+  padding: 20px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.header {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.logo {
+  font-size: 4rem;
+  font-weight: 600;
+  color: #4caf50;
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 1.2rem;
+  color: #034705;
+  max-width: 600px;
+  margin: 0 auto;
+  margin-top: 25px;
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+
+.footer {
+  /* background-color: #451895; */
+  color: #034705;
+  text-align: center;
+  font-size: 1rem;
+  padding: 1rem;
+}

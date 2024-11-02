@@ -7,7 +7,7 @@ const headerOptions = {
   },
 };
 
-interface AuthData {
+export interface AuthData {
   username: string;
   password: string;
 }

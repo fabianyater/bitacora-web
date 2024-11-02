@@ -1,8 +1,9 @@
 export const getApiUrl = (): string | undefined => {
-  if (process.env.REACT_APP_ENV === "dev") {
-    return process.env.REACT_APP_BACKEND_URL_DEV;
+  if (import.meta.env.VITE_ENV === "dev") {
+    console.log("object");
+    return import.meta.env.VITE_BACKEND_URL_DEV;
   } else {
-    return process.env.REACT_APP_BACKEND_URL_PROD;
+    return import.meta.env.VITE_BACKEND_URL_PROD;
   }
 };
 
