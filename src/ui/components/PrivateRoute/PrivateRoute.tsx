@@ -4,12 +4,12 @@ import { useAuthContext } from "../../../hooks/useAuth";
 
 export type PrivateRouteProps = {
   children: ReactNode;
-  adminChildren?: ReactNode;
+  allowedRoles?: string[];
 };
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({
   children,
-  adminChildren,
+  allowedRoles,
 }) => {
   const { auth } = useAuthContext();
 
@@ -17,8 +17,8 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
     return <Navigate to="/" />;
   }
 
-  if (auth.role === "admin" && adminChildren) {
-    return <>{adminChildren}</>;
+  if (!auth.role || (allowedRoles && !allowedRoles.includes(auth.role))) {
+    return <Navigate to="/" />;
   }
 
   return <>{children}</>;

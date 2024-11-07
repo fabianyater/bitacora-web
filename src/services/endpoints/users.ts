@@ -38,5 +38,22 @@ const getUsers = async (token: string): Promise<IUserResponse> => {
   return response.data;
 };
 
-export { getUsers, registerPartner, registerResearcher, registerUser };
+const getProfile = async (
+  token: string,
+  id: string
+): Promise<IUserResponse> => {
+  const response = await api.get<IUserResponse>(
+    routes.USER.GET_PROFILE(id),
+    getHeaderOptions(token)
+  );
+
+  return response.data;
+};
+
+export {
+  getProfile, getUsers,
+  registerPartner,
+  registerResearcher,
+  registerUser
+};
 

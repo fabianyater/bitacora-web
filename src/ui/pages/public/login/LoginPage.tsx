@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import toast, { Toaster } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../../../hooks/useAuth";
 import { AuthData, authenticate } from "../../../../services/endpoints/auth";
@@ -13,20 +14,31 @@ export const LoginPage = () => {
 
   const onSubmit: SubmitHandler<AuthData> = async (data) => {
     setIsLoading(true);
-    const response = await authenticate(data);
 
     try {
-      if (response.token) {
-        setAuth({ token: response.token });
-        localStorage.setItem(
-          "token",
-          JSON.stringify({ ...auth, token: response.token })
-        );
+      const response = await authenticate(data);
 
-        navigate("/dashboard");
+      if (response.token && response.role && response.username) {
+        const updateAuth = {
+          token: response.token,
+          role: response.role,
+          username: response.username,
+        };
+
+        setAuth(updateAuth);
+        localStorage.setItem("auth", JSON.stringify(updateAuth));
+
+        if (response.role === "admin") {
+          navigate("/dashboard");
+        } else {
+          navigate("/logbooks");
+        }
+      } else {
+        toast.error("Datos inválidos");
       }
     } catch (error: unknown) {
       console.log("Something went wrong: ", error);
+      toast.error("Error al iniciar sesión. Intente nuevamente");
     } finally {
       setIsLoading(false);
     }
@@ -34,9 +46,13 @@ export const LoginPage = () => {
 
   useEffect(() => {
     if (auth.token) {
-      navigate("/dashboard");
+      if (auth.role === "admin") {
+        navigate("/dashboard");
+      } else {
+        navigate("/logbooks");
+      }
     }
-  }, [auth.token, navigate]);
+  }, [auth.role, auth.token, navigate]);
 
   return (
     <div className={styles.form_wrapper}>
@@ -61,12 +77,13 @@ export const LoginPage = () => {
           />
         </label>
         <button className={styles.button} type="submit">
-          {isLoading ? "Loading..." : "Iniciar sesión"}
+          {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
         </button>
       </form>
       <span>
         ¿No tienes una cuenta? ¡Registrate <Link to={"/register"}>aquí!</Link>
       </span>
+      <Toaster position="top-right" />
     </div>
   );
 };

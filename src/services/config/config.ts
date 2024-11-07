@@ -8,7 +8,8 @@ const API_ROUTES = {
 const USER = {
   REGISTER_RESEARCHER: (): string => `${API_ROUTES.USERS}/register/researcher`,
   REGISTER_PARTNER: (): string => `${API_ROUTES.USERS}/register/partner`,
-  GET_PROFILE: (): string => `${API_ROUTES.USERS}/profile`,
+  GET_PROFILE: (userId: string): string =>
+    `${API_ROUTES.USERS}/profile/${userId}`,
   GET_USERS: (): string => `${API_ROUTES.USERS}/`,
   DELETE_USER_BY_ID: (userId: string): string =>
     `${API_ROUTES.USERS}/${userId}`,

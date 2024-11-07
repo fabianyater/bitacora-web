@@ -14,6 +14,8 @@ export interface AuthData {
 
 interface AuthResponse {
   token: string;
+  role: string;
+  username: string;
 }
 
 const authenticate = async (data: AuthData): Promise<AuthResponse> => {

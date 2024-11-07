@@ -8,6 +8,8 @@ import App from "./App.tsx";
 import { AuthProvider } from "./context/AuthProvider.tsx";
 import "./index.css";
 import PrivateRoute from "./ui/components/PrivateRoute/PrivateRoute.tsx";
+import { Dashboard } from "./ui/pages/private/dashboard/Dashboard.tsx";
+import { LogBookPage } from "./ui/pages/private/logbooks/LogBookPage.tsx";
 import { LoginPage } from "./ui/pages/public/login/LoginPage.tsx";
 import { RegisterPage } from "./ui/pages/public/register/Register.tsx";
 
@@ -23,8 +25,16 @@ createRoot(document.getElementById("root")!).render(
               <Route
                 path="/dashboard"
                 element={
-                  <PrivateRoute>
-                    <h1>Admin</h1>
+                  <PrivateRoute allowedRoles={["admin"]}>
+                    <Dashboard />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/logbooks"
+                element={
+                  <PrivateRoute allowedRoles={["researcher", "partner"]}>
+                    <LogBookPage />
                   </PrivateRoute>
                 }
               />

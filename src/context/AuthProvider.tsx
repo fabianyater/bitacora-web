@@ -1,4 +1,3 @@
-import { jwtDecode } from "jwt-decode";
 import {
   createContext,
   Dispatch,
@@ -13,20 +12,14 @@ interface AuthState {
   token?: string;
   userId?: string;
   role?: string;
+  username?: string;
   [key: string]: unknown;
-}
-
-interface DecodedToken {
-  userId: string;
-  username: string;
-  role: string;
-  iat: number;
-  exp: number;
 }
 
 interface AuthContextType {
   auth: AuthState;
   setAuth: Dispatch<SetStateAction<AuthState>>;
+  logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -41,21 +34,20 @@ export function AuthProvider({ children }: Readonly<AuthProviderProps>) {
   const [auth, setAuth] = useState<AuthState>({});
 
   useEffect(() => {
-    const storedAuth = localStorage.getItem("token");
+    const storedAuth = localStorage.getItem("auth");
     if (storedAuth) {
       const parsedAuth = JSON.parse(storedAuth);
-
-      if (parsedAuth.token) {
-        const decodedToken = jwtDecode<DecodedToken>(parsedAuth.token);
-        parsedAuth.userId = decodedToken.userId;
-        parsedAuth.role = decodedToken.role;
-      }
 
       setAuth(parsedAuth);
     }
   }, []);
 
-  const value = useMemo(() => ({ auth, setAuth }), [auth, setAuth]);
+  const logout = () => {
+    localStorage.removeItem("auth");
+    setAuth({});
+  };
+
+  const value = useMemo(() => ({ auth, setAuth, logout }), [auth, setAuth]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
