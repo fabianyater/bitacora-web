@@ -1,3 +1,4 @@
+import { getHeaderOptions } from "../../utils/utils";
 import routes from "../config";
 import { api } from "../config/axiosConfig";
 
@@ -16,6 +17,7 @@ interface AuthResponse {
   token: string;
   role: string;
   username: string;
+  expirationTime?: number;
 }
 
 const authenticate = async (data: AuthData): Promise<AuthResponse> => {
@@ -28,5 +30,14 @@ const authenticate = async (data: AuthData): Promise<AuthResponse> => {
   return response.data;
 };
 
-export { authenticate };
+const validateToken = async (token: string): Promise<number> => {
+  const response = await api.get<number>(
+    routes.AUTH.VALIDATE_TOKEN(),
+    getHeaderOptions(token)
+  );
+
+  return response.status;
+};
+
+export { authenticate, validateToken };
 

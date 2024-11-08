@@ -8,7 +8,8 @@ import styles from "./styles.module.css";
 
 export const LoginPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { auth, setAuth } = useAuthContext();
+  const { auth, expiredSession, setExpiredSession, loading, setAuth } =
+    useAuthContext();
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<AuthData>();
 
@@ -23,6 +24,7 @@ export const LoginPage = () => {
           token: response.token,
           role: response.role,
           username: response.username,
+          expirationTime: response.expirationTime,
         };
 
         setAuth(updateAuth);
@@ -37,22 +39,28 @@ export const LoginPage = () => {
         toast.error("Datos inválidos");
       }
     } catch (error: unknown) {
-      console.log("Something went wrong: ", error);
-      toast.error("Error al iniciar sesión. Intente nuevamente");
+      toast.error(`Error al iniciar sesión. Intente nuevamente. ${error}`);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    if (auth.token) {
+    if (!loading && auth.token && auth.role) {
       if (auth.role === "admin") {
-        navigate("/dashboard");
-      } else {
-        navigate("/logbooks");
+        navigate("/dashboard", { replace: true });
+      } else if (["researcher", "partner"].includes(auth.role)) {
+        navigate("/logbooks", { replace: true });
       }
     }
-  }, [auth.role, auth.token, navigate]);
+  }, [auth, loading, navigate]);
+
+  useEffect(() => {
+    if (expiredSession) {
+      setExpiredSession(false);
+      toast.error("La sesión ha caducado");
+    }
+  }, [expiredSession, setExpiredSession]);
 
   return (
     <div className={styles.form_wrapper}>

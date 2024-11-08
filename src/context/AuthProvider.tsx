@@ -13,12 +13,16 @@ interface AuthState {
   userId?: string;
   role?: string;
   username?: string;
+  expirationTime?: number;
   [key: string]: unknown;
 }
 
 interface AuthContextType {
+  expiredSession: boolean;
+  setExpiredSession: Dispatch<SetStateAction<boolean>>;
   auth: AuthState;
   setAuth: Dispatch<SetStateAction<AuthState>>;
+  loading: boolean;
   logout: () => void;
 }
 
@@ -31,7 +35,9 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: Readonly<AuthProviderProps>) {
+  const [expiredSession, setExpiredSession] = useState<boolean>(false);
   const [auth, setAuth] = useState<AuthState>({});
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const storedAuth = localStorage.getItem("auth");
@@ -40,6 +46,8 @@ export function AuthProvider({ children }: Readonly<AuthProviderProps>) {
 
       setAuth(parsedAuth);
     }
+
+    setLoading(false);
   }, []);
 
   const logout = () => {
@@ -47,7 +55,17 @@ export function AuthProvider({ children }: Readonly<AuthProviderProps>) {
     setAuth({});
   };
 
-  const value = useMemo(() => ({ auth, setAuth, logout }), [auth, setAuth]);
+  const value = useMemo(
+    () => ({
+      auth,
+      setAuth,
+      expiredSession,
+      setExpiredSession,
+      loading,
+      logout,
+    }),
+    [auth, setAuth, expiredSession, loading]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

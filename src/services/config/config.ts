@@ -48,6 +48,7 @@ const PERMISSIONS = {
 
 const AUTH = {
   LOGIN: (): string => `${API_ROUTES.AUTH}/login`,
+  VALIDATE_TOKEN : () => `${API_ROUTES.AUTH}/validateToken`
 };
 
 const exportedObject = {

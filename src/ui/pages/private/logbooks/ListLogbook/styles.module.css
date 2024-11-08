@@ -1,0 +1,8 @@
+.cardContainer {
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}

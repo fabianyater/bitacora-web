@@ -11,13 +11,16 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   children,
   allowedRoles,
 }) => {
-  const { auth } = useAuthContext();
+  const { auth, loading } = useAuthContext();
 
-  if (!auth.token) {
-    return <Navigate to="/" />;
+  if (loading) {
+    return <h1>Cargando...</h1>;
   }
 
-  if (!auth.role || (allowedRoles && !allowedRoles.includes(auth.role))) {
+  if (
+    !auth.token ||
+    (allowedRoles && auth.role && !allowedRoles.includes(auth.role))
+  ) {
     return <Navigate to="/" />;
   }
 

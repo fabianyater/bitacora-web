@@ -36,6 +36,7 @@ export type CollectedSpecies = {
 };
 
 export interface ILogBook {
+  _id: string;
   title: string;
   date: Date;
   location: Coordinates;

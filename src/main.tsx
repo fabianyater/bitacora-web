@@ -9,9 +9,9 @@ import { AuthProvider } from "./context/AuthProvider.tsx";
 import "./index.css";
 import PrivateRoute from "./ui/components/PrivateRoute/PrivateRoute.tsx";
 import { Dashboard } from "./ui/pages/private/dashboard/Dashboard.tsx";
-import {
-  LocationsPage
-} from "./ui/pages/private/locations/LocationsPage.tsx";
+import { LocationsPage } from "./ui/pages/private/locations/LocationsPage.tsx";
+import Details from "./ui/pages/private/logbooks/details/Details.tsx";
+import ListLogbook from "./ui/pages/private/logbooks/ListLogbook/ListLogbook.tsx";
 import { LogBookPage } from "./ui/pages/private/logbooks/LogBookPage.tsx";
 import { LoginPage } from "./ui/pages/public/login/LoginPage.tsx";
 import { RegisterPage } from "./ui/pages/public/register/Register.tsx";
@@ -40,7 +40,24 @@ createRoot(document.getElementById("root")!).render(
                     <LogBookPage />
                   </PrivateRoute>
                 }
-              />
+              >
+                <Route
+                  index
+                  element={
+                    <PrivateRoute allowedRoles={["researcher", "partner"]}>
+                      <ListLogbook />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path=":userId"
+                  element={
+                    <PrivateRoute allowedRoles={["researcher", "partner"]}>
+                      <Details />
+                    </PrivateRoute>
+                  }
+                />
+              </Route>
               <Route
                 path="/locations"
                 element={

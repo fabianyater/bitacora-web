@@ -1,7 +1,8 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Toaster } from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../../hooks/useAuth";
+import { validateToken } from "../../../services/endpoints/auth";
 import styles from "./UserStyles.module.css";
 
 type UserLayoutPropsType = {
@@ -9,9 +10,10 @@ type UserLayoutPropsType = {
 };
 
 export const UserLayout = ({ children }: UserLayoutPropsType) => {
-  const { auth, logout } = useAuthContext();
+  const { auth, setExpiredSession, logout } = useAuthContext();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const mapRole = (role: string | undefined) => {
     return role === "researcher" ? "Investigador" : "Compañero";
@@ -41,6 +43,34 @@ export const UserLayout = ({ children }: UserLayoutPropsType) => {
     };
   }, []);
 
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        if (auth.token) {
+          await validateToken(auth.token);
+          return;
+        }
+      } catch (error) {
+        console.log(error);
+        setExpiredSession(true);
+        logout();
+        navigate("/");
+      }
+    };
+
+    if (auth.expirationTime) {
+      const timeUntilExpiration = auth.expirationTime - Date.now();
+
+      if (timeUntilExpiration > 0) {
+        const timeout = setTimeout(checkToken, timeUntilExpiration);
+
+        return () => clearTimeout(timeout);
+      } else {
+        checkToken();
+      }
+    }
+  }, [auth.expirationTime, auth.token, logout, navigate]);
+
   return (
     <div className={styles.wrapper}>
       <header className={styles.header}>
@@ -53,7 +83,7 @@ export const UserLayout = ({ children }: UserLayoutPropsType) => {
               <Link to="/logbooks">Bitácoras</Link>
             </li>
             <li>
-              <Link to="/locations">Ubicaciones</Link>
+              <Link to="locations">Ubicaciones</Link>
             </li>
           </ul>
           <div className={styles.user} ref={userMenuRef}>

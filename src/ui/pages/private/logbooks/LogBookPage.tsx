@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import FilterSidebar, {
   FilterOptions,
 } from "../../../components/FilterSidebar/FilterSidebar";
@@ -25,6 +26,7 @@ export const LogBookPage = () => {
       [name]: value,
     }));
   };
+
   return (
     <>
       <header className={styles.header}>
@@ -43,9 +45,9 @@ export const LogBookPage = () => {
 
       <section className={styles.wrapper}>
         <FilterSidebar filters={filters} onFilterChange={handleInputChange} />
-
-        <section style={{ height: "300vh" }}>
+        <section>
           <h1 className={styles.title}>Centro de Bitácoras</h1>
+          <Outlet />
         </section>
       </section>
     </>
