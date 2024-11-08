@@ -46,7 +46,6 @@ export const UserLayout = ({ children }: UserLayoutPropsType) => {
   useEffect(() => {
     const checkToken = async () => {
       try {
-        console.log("Hola");
         if (auth.token) {
           await validateToken(auth.token);
           return;
