@@ -1,8 +1,17 @@
+import {
+  ArrowLeft,
+  CloudSunRain,
+  Leaf,
+  MapPin,
+  MessageCircle,
+  TreeDeciduous,
+} from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../../../../../hooks/useAuth";
 import { getLogbookById } from "../../../../../services/endpoints/logbooks";
 import { ILogBook } from "../../../../../utils/types/logbooksTypes";
+import CardInfo from "../../../../components/CardInfo/CardInfo";
 import styles from "./styles.module.css";
 
 const Details = () => {
@@ -10,6 +19,7 @@ const Details = () => {
   const { auth } = useAuthContext();
   const [logbook, setLogbook] = useState<ILogBook | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLogbookDetail = async () => {
@@ -33,131 +43,107 @@ const Details = () => {
   if (!logbook) return <h1>No se encontró la bitácora.</h1>;
 
   return (
-    <div className={styles.detailContainer}>
-      <div className={styles.headerSection}>
+    <div className={styles.wrapper}>
+      <button className={styles.backButton} onClick={() => navigate(-1)}>
+        <ArrowLeft />
+      </button>
+      <header className={styles.header}>
         <h1>{logbook.title}</h1>
         <p className={styles.date}>
-          <strong>Fecha:</strong> {new Date(logbook.date).toLocaleDateString()}
+          Creada el{" "}
+          {new Date(logbook.date).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </p>
-      </div>
+      </header>
 
-      <div className={styles.card}>
-        <section className={styles.section}>
-          <h2>Ubicación</h2>
-          <p>
-            Latitud: {logbook.location.latitude}, Longitud:{" "}
-            {logbook.location.longitude}
+      <main className={styles.main}>
+        <CardInfo icon={<CloudSunRain />} title="Condiciones climáticas">
+          <p className={styles.label}>
+            Temperatura: <span>{logbook.weather.temperature}°C</span>
           </p>
-        </section>
-
-        <section className={styles.section}>
-          <h2>Clima</h2>
-          <div className={styles.climateInfo}>
-            <p>
-              <strong>Tipo:</strong> {logbook.weather.weatherType}
-            </p>
-            <p>
-              <strong>Temperatura:</strong> {logbook.weather.temperature}°C
-            </p>
-            <p>
-              <strong>Humedad:</strong> {logbook.weather.humidity}%
-            </p>
-            <p>
-              <strong>Viento:</strong> {logbook.weather.windSpeed} m/s
-            </p>
-            <p>
-              <strong>Hora de Muestreo:</strong>{" "}
+          <p className={styles.label}>
+            Humedad: <span>{logbook.weather.humidity}%</span>
+          </p>
+          <p className={styles.label}>
+            Viento: <span>{logbook.weather.windSpeed}m/s</span>
+          </p>
+          <p className={styles.label}>
+            Tipo de clima: <span>{logbook.weather.weatherType}</span>
+          </p>
+          <p className={styles.label}>
+            Hora de muestreo:{" "}
+            <span>
               {new Date(logbook.weather.samplingTime).toLocaleTimeString()}
-            </p>
-          </div>
-        </section>
-      </div>
-
-      <div className={styles.card}>
-        <section className={styles.section}>
-          <h2>Hábitat</h2>
-          <p>
-            <strong>Tipo de Vegetación:</strong>{" "}
-            {logbook.habitat.vegetationType}
+            </span>
           </p>
-          <p>
-            <strong>Altitud:</strong> {logbook.habitat.altitude} m
+        </CardInfo>
+        <CardInfo icon={<MapPin />} title="Ubicación">
+          <p className={styles.label}>
+            Coordenadas: <span>{logbook.location.latitude}</span>,{" "}
+            <span>{logbook.location.longitude}</span>
           </p>
-          <p>
-            <strong>Tipo de Suelo:</strong> {logbook.habitat.soilType}
+        </CardInfo>
+        <CardInfo icon={<TreeDeciduous />} title="Hábitat">
+          <p>{logbook.habitat.notes}</p>
+          <p className={styles.label}>
+            Tipo de vegetación: <span>{logbook.habitat.vegetationType}</span>
           </p>
-          <p>
-            <strong>Clima:</strong> {logbook.habitat.climate}
+          <p className={styles.label}>
+            Altitud: <span>{logbook.habitat.altitude}m</span>
           </p>
-          <p>
-            <strong>Notas:</strong> {logbook.habitat.notes}
+          <p className={styles.label}>
+            Tipo de suelo: <span>{logbook.habitat.soilType}</span>
           </p>
-        </section>
-      </div>
-
-      <div className={styles.speciesCard}>
-        <h2>Especie Colectada</h2>
-        <div className={styles.speciesInfo}>
-          <p>
-            <strong>Nombre Científico:</strong>{" "}
-            {logbook.collectedSpecies.scientificName}
+          <p className={styles.label}>
+            Clima: <span>{logbook.habitat.climate}</span>
           </p>
+        </CardInfo>
+        <CardInfo icon={<Leaf />} title="Especies Recolectadas">
           <p>
-            <strong>Nombre Común:</strong> {logbook.collectedSpecies.commonName}
+            Especies vegetales notables observadas y recogidas durante la
+            expedición
           </p>
-          <p>
-            <strong>Familia:</strong> {logbook.collectedSpecies.family}
-          </p>
-          <p>
-            <strong>Muestras:</strong> {logbook.collectedSpecies.sampleQuantity}
-          </p>
-          <p>
-            <strong>Estado:</strong> {logbook.collectedSpecies.plantStatus}
-          </p>
-          {logbook.collectedSpecies.photos.map((photo) => (
-            <div key={photo.url} className={styles.photoContainer}>
+          {logbook.collectedSpecies.map((species) => (
+            <div key={species.scientificName} className={styles.speciesCard}>
               <img
-                src={photo.url}
-                alt={photo.description}
-                className={styles.photo}
+                src={species.photos[0].url}
+                alt={species.photos[0].description}
               />
-              <p>{photo.description}</p>
-              <p>
-                <em>Por:</em> {photo.photographer}
-              </p>
+              <div className={styles.speciesInfo}>
+                <h2 className={styles.speciesName}>
+                  {species.scientificName} <span>({species.commonName})</span>
+                </h2>
+                <p>{species.family}</p>
+                <p>{species.sampleQuantity}</p>
+                <p>{species.plantStatus}</p>
+              </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      <div className={styles.imagesSection}>
-        <h2>Imágenes del Área de Muestreo</h2>
-        <div className={styles.imageGallery}>
-          {logbook.images.map((image) => (
-            <div key={image.url} className={styles.imageCard}>
-              {image.url ? (
-                <img
-                  src={image.url}
-                  alt={image.description ?? "Imagen de muestreo"}
-                />
-              ) : (
-                <div className={styles.noImage}>Imagen no disponible</div>
-              )}
-              <p>
-                <strong>{image.description ?? "Sin descripción"}</strong>
-              </p>
-              <p>
-                <em>Fotógrafo:</em> {image.photographer ?? "Desconocido"}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className={styles.observationsSection}>
-        <h2>Observaciones Adicionales</h2>
-        <p>{logbook.additionalObservations}</p>
-      </div>
+        </CardInfo>
+        <CardInfo title="Imagenes del Área de Muestreo">
+          <p>Documentación visual del área de muestreo</p>
+          <div className={styles.imageGallery}>
+            {logbook.images.map((image) => (
+              <div key={image.url} className={styles.imageCard}>
+                {image.url ? (
+                  <img
+                    src={image.url}
+                    alt={image.description ?? "Imagen de muestreo"}
+                  />
+                ) : (
+                  <div className={styles.noImage}>Imagen no disponible</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </CardInfo>
+        <CardInfo icon={<MessageCircle />} title="Observaciones Adicionales">
+          <p>{logbook.additionalObservations}</p>
+        </CardInfo>
+      </main>
     </div>
   );
 };

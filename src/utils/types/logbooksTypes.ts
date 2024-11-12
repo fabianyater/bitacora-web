@@ -43,7 +43,7 @@ export interface ILogBook {
   weather: WeatherConditions;
   habitat: HabitatDescription;
   images: SamplingSiteImage[];
-  collectedSpecies: CollectedSpecies;
+  collectedSpecies: CollectedSpecies[];
   additionalObservations: string;
 }
 
@@ -54,7 +54,7 @@ export interface LogbookRequest {
   weather: WeatherConditions;
   habitat: HabitatDescription;
   images: SamplingSiteImage[];
-  collectedSpecies: CollectedSpecies;
+  collectedSpecies: CollectedSpecies[];
   additionalObservations: string;
 }
 

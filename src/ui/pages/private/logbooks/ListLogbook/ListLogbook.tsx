@@ -52,6 +52,9 @@ const ListLogbook = () => {
     fetchLogbooks();
   }, [auth.token]);
 
+  if (loading) return <LoadingPage text="Cargando Bitácoras" />;
+  if (!logbooks.length) return <h1>No hay bitácoras disponibles</h1>;
+
   return (
     <section className={styles.wrapper}>
       <header className={styles.header}>
@@ -81,11 +84,11 @@ const ListLogbook = () => {
               key={logbook.title}
               path={logbook._id}
               title={logbook.title}
-              commonName={logbook.collectedSpecies.commonName}
+              commonName={logbook.collectedSpecies[0].commonName}
               date={logbook.date.toString()}
               humidity={logbook.weather.humidity}
               sampleImage={logbook.images[0].url}
-              scientificName={logbook.collectedSpecies.scientificName ?? ""}
+              scientificName={logbook.collectedSpecies[0].scientificName ?? ""}
               temperature={logbook.weather.temperature}
               weatherType={logbook.weather.weatherType}
             />
