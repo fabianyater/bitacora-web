@@ -1,5 +1,6 @@
-import { Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuthContext } from "../../../../../hooks/useAuth";
 import { getAllLogbooks } from "../../../../../services/endpoints/logbooks";
 import { ILogBook } from "../../../../../utils/types/logbooksTypes";
@@ -76,7 +77,16 @@ const ListLogbook = () => {
         <FilterSidebar filters={filters} onFilterChange={handleInputChange} />
       </header>
       <section>
-        <h1 className={styles.title}>Centro de Bitácoras</h1>
+        <div className={styles.title}>
+          <h1 className={styles.title}>Centro de Bitácoras</h1>
+
+          <Link to="/logbooks/new">
+            <button className={styles.newButton}>
+              <Plus />
+              Nueva Bitácora
+            </button>
+          </Link>
+        </div>
         {loading && <LoadingPage text="Cargando Bitácoras" />}
         <div className={styles.cardContainer}>
           {logbooks.map((logbook) => (

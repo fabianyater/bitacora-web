@@ -44,18 +44,97 @@
       }
 
       .searchButton {
-        padding: 0.8rem;
-        border: none;
-        background-color: #3b82f6;
+        width: max-content;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        background-color: #2563eb;
         color: white;
         border-radius: 0.375rem;
         font-size: 0.875rem;
+        padding: 0.8rem;
+        border: none;
+        text-align: left;
         cursor: pointer;
-        transition: background-color 0.3s;
+        transition: background-color 0.2s ease;
 
         &:hover {
-          background-color: #2563eb;
+          background-color: #1d4ed8;
         }
+
+        &:active {
+          background-color: #1741a2;
+        }
+
+        &:disabled {
+          background-color: #ccc;
+          cursor: not-allowed;
+        }
+
+        &:focus {
+          outline: none;
+        }
+
+        svg {
+          font-size: 1.2rem;
+          color: #fff;
+        }
+
+        span {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 30px;
+
+    .newButton {
+      width: max-content;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      background-color: #2563eb;
+      color: white;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      padding: 0.8rem;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #1d4ed8;
+      }
+
+      &:active {
+        background-color: #1741a2;
+      }
+
+      &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      svg {
+        font-size: 1.2rem;
+        color: #fff;
+      }
+
+      span {
+        font-size: 1rem;
       }
     }
   }
@@ -70,7 +149,6 @@
     width: 100%;
   }
 }
-
 
 @media screen and (max-width: 768px) {
   .wrapper {
