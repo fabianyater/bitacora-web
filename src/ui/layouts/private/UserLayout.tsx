@@ -69,7 +69,7 @@ export const UserLayout = ({ children }: UserLayoutPropsType) => {
         checkToken();
       }
     }
-  }, [auth.expirationTime, auth.token, logout, navigate]);
+  }, [auth.expirationTime, auth.token, logout, navigate, setExpiredSession]);
 
   return (
     <div className={styles.wrapper}>

@@ -25,9 +25,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onFilterChange,
 }) => {
   return (
-    <aside className={styles.sidebar}>
-      <h3>Filtrar</h3>
-
+    <section className={styles.sidebar}>
       <Input
         label="Fecha de inicio"
         type="date"
@@ -87,7 +85,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
           { label: "Relevancia", value: "relevance" },
         ]}
       />
-    </aside>
+    </section>
   );
 };
 

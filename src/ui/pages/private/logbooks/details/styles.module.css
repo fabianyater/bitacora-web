@@ -1,3 +1,109 @@
-.details {
-  
+.detailContainer {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: 'Roboto', sans-serif;
+  color: #2c3e50;
+}
+
+.headerSection {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.date {
+  color: #7f8c8d;
+  font-size: 0.9em;
+}
+
+.card,
+.speciesCard,
+.observationsSection {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(44, 62, 80, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover,
+.speciesCard:hover,
+.observationsSection:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(44, 62, 80, 0.15);
+}
+
+.section h2,
+.speciesCard h2,
+.observationsSection h2 {
+  font-size: 1.5em;
+  color: #2980b9;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+}
+
+.climateInfo,
+.speciesInfo,
+.imageGallery {
+  display: grid;
+  gap: 10px;
+}
+
+.photoContainer,
+.imageCard {
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.photo,
+.imageCard img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.photo:hover,
+.imageCard img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.imagesSection h2 {
+  text-align: center;
+  font-size: 1.5em;
+  color: #2980b9;
+  margin: 20px 0;
+}
+
+.noImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  background-color: #ecf0f1;
+  color: #bdc3c7;
+  font-size: 1.1em;
+  border-radius: 8px;
+}
+
+.observationsSection {
+  background-color: #eafaf1;
+  border-left: 4px solid #2ecc71;
+  padding: 20px;
+}
+
+.observationsSection h2 {
+  color: #27ae60;
+}
+
+@media (max-width: 768px) {
+  .climateInfo,
+  .speciesInfo,
+  .imageGallery {
+    grid-template-columns: 1fr;
+  }
 }
