@@ -4,14 +4,16 @@ import {
   Leaf,
   MapPin,
   MessageCircle,
+  Pencil,
   TreeDeciduous,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../../../../../hooks/useAuth";
 import { getLogbookById } from "../../../../../services/endpoints/logbooks";
 import { ILogBook } from "../../../../../utils/types/logbooksTypes";
 import CardInfo from "../../../../components/CardInfo/CardInfo";
+import LoadingPage from "../../../../pages/public/LoadingPage/LoadingPage";
 import styles from "./styles.module.css";
 
 const Details = () => {
@@ -39,14 +41,21 @@ const Details = () => {
     fetchLogbookDetail();
   }, [auth.token, userId]);
 
-  if (loading) return <h1>Cargando Detalle de la Bitácora...</h1>;
+  if (loading) return <LoadingPage text="Cargando Detalle de la Bitácora..." />;
   if (!logbook) return <h1>No se encontró la bitácora.</h1>;
 
   return (
     <div className={styles.wrapper}>
-      <button className={styles.backButton} onClick={() => navigate(-1)}>
-        <ArrowLeft />
-      </button>
+      <div className={styles.buttons}>
+        <button onClick={() => navigate(-1)}>
+          <ArrowLeft />
+        </button>
+        <Link to={`/logbooks/${userId}/edit`}>
+          <button>
+            <Pencil />
+          </button>
+        </Link>
+      </div>
       <header className={styles.header}>
         <h1>{logbook.title}</h1>
         <p className={styles.date}>
