@@ -1,4 +1,3 @@
-import { PrimeReactProvider } from "primereact/api";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import { StrictMode } from "react";
@@ -10,6 +9,7 @@ import "./index.css";
 import PrivateRoute from "./ui/components/PrivateRoute/PrivateRoute.tsx";
 import { Dashboard } from "./ui/pages/private/dashboard/Dashboard.tsx";
 import { LocationsPage } from "./ui/pages/private/locations/LocationsPage.tsx";
+import CreateLogBookPage from "./ui/pages/private/logbooks/create/CreateLogBookPage.tsx";
 import Details from "./ui/pages/private/logbooks/details/Details.tsx";
 import ListLogbook from "./ui/pages/private/logbooks/ListLogbook/ListLogbook.tsx";
 import { LogBookPage } from "./ui/pages/private/logbooks/LogBookPage.tsx";
@@ -18,58 +18,64 @@ import { RegisterPage } from "./ui/pages/public/register/Register.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <PrimeReactProvider>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route element={<App />}>
-              <Route path="/" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<App />}>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute allowedRoles={["admin"]}>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/logbooks"
+              element={
+                <PrivateRoute allowedRoles={["researcher", "partner"]}>
+                  <LogBookPage />
+                </PrivateRoute>
+              }
+            >
               <Route
-                path="/dashboard"
+                index
                 element={
-                  <PrivateRoute allowedRoles={["admin"]}>
-                    <Dashboard />
+                  <PrivateRoute allowedRoles={["researcher", "partner"]}>
+                    <ListLogbook />
                   </PrivateRoute>
                 }
               />
               <Route
-                path="/logbooks"
+                path="new"
                 element={
                   <PrivateRoute allowedRoles={["researcher", "partner"]}>
-                    <LogBookPage />
+                    <CreateLogBookPage />
                   </PrivateRoute>
                 }
-              >
-                <Route
-                  index
-                  element={
-                    <PrivateRoute allowedRoles={["researcher", "partner"]}>
-                      <ListLogbook />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path=":userId"
-                  element={
-                    <PrivateRoute allowedRoles={["researcher", "partner"]}>
-                      <Details />
-                    </PrivateRoute>
-                  }
-                />
-              </Route>
+              />
               <Route
-                path="/locations"
+                path=":userId"
                 element={
                   <PrivateRoute allowedRoles={["researcher", "partner"]}>
-                    <LocationsPage />
+                    <Details />
                   </PrivateRoute>
                 }
               />
             </Route>
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </PrimeReactProvider>
+            <Route
+              path="/locations"
+              element={
+                <PrivateRoute allowedRoles={["researcher", "partner"]}>
+                  <LocationsPage />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>
 );

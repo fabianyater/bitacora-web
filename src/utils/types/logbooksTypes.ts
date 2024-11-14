@@ -1,4 +1,7 @@
 export type Coordinates = {
+  city: string;
+  region: string;
+  country: string;
   latitude: number;
   longitude: number;
 };
@@ -31,8 +34,8 @@ export type CollectedSpecies = {
   commonName: string;
   family?: string;
   sampleQuantity: number;
-  plantStatus: "viva" | "seca" | "otra";
-  photos: SamplingSiteImage[];
+  plantStatus: string;
+  photos: File[];
 };
 
 export interface ILogBook {
