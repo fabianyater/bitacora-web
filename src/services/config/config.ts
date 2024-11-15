@@ -3,6 +3,7 @@ const API_ROUTES = {
   USERS: `/users`,
   LOGBOOKS: `/logbooks`,
   PERMISSIONS: `/permissions`,
+  WEATHER: `/weather`,
 } as const;
 
 const USER = {

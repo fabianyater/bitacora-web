@@ -2,13 +2,21 @@ import {
   ChevronLeft,
   ChevronRight,
   CloudSun,
+  Loader,
   MapPin,
   Plus,
   Trash2,
   Upload,
 } from "lucide-react";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../../../../hooks/useAuth";
+import useCurrentLocation from "../../../../../hooks/useCurrentLocation";
+import { uploadImage } from "../../../../../services/endpoints/cloudinary";
+import { addLogBook } from "../../../../../services/endpoints/logbooks";
+import { getLocation } from "../../../../../services/endpoints/weather";
 import { LogbookRequest } from "../../../../../utils/types/logbooksTypes";
 import styles from "./styles.module.css";
 
@@ -25,7 +33,11 @@ const CreateLogbookForm: React.FC = () => {
     control,
     name: "collectedSpecies",
   });
+  const { auth } = useAuthContext();
   const [step, setStep] = useState<number>(1);
+  const { location, requestLocation } = useCurrentLocation();
+  const [loadingLocation, setLoadingLocation] = useState(false);
+  const navigate = useNavigate();
 
   const steps = [
     { id: 1, name: "Información General" },
@@ -33,26 +45,77 @@ const CreateLogbookForm: React.FC = () => {
     { id: 3, name: "Especies Colectadas" },
   ];
 
-  const onSubmit: SubmitHandler<LogbookRequest> = (data) => {
-    console.log(data);
-    // Here you would typically send the data to your backend
-  };
-
   const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => prev - 1);
 
   const handleFileChange = useCallback(
-    (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
         const filesArray = Array.from(e.target.files);
-        setValue(`collectedSpecies.${index}.photos`, filesArray);
+
+        const photosWithUrls = await Promise.all(
+          filesArray.map(async (file) => {
+            const url = await uploadImage(file);
+            return { url, file };
+          })
+        );
+
+        const currentPhotos = watch(`collectedSpecies.${index}.photos`) || [];
+
+        setValue(`collectedSpecies.${index}.photos`, [
+          ...currentPhotos,
+          ...photosWithUrls,
+        ]);
       }
     },
-    [setValue]
+    [setValue, watch]
   );
+
+  useEffect(() => {
+    if (location) {
+      const { latitude, longitude } = location;
+      const getCuurentLocation = async () => {
+        setLoadingLocation(true);
+        try {
+          const response = await getLocation(latitude, longitude);
+          setValue("location.city", response?.location.name);
+          setValue("location.country", response?.location.country);
+          setValue("location.latitude", response?.location.lat);
+          setValue("location.longitude", response?.location.lon);
+          setValue("location.region", response.location.region);
+          setValue("weather.temperature", response?.current.temp_c);
+          setValue("weather.humidity", response?.current.humidity);
+          setValue("weather.windSpeed", response?.current.wind_mph);
+          setValue("weather.weatherType", response?.current.condition.text);
+        } catch (error: unknown) {
+          toast.error("Error al cargar la ubicación" + error);
+        } finally {
+          setLoadingLocation(false);
+        }
+      };
+      getCuurentLocation();
+    }
+  }, [location, setValue]);
+
+  const onSubmit: SubmitHandler<LogbookRequest> = async (data) => {
+    try {
+      if (!auth.token) throw new Error("No hay token de autenticación");
+
+      const response = await addLogBook(auth.token, data);
+      if (response === 201) {
+        toast.success("Bitácora creada exitosamente");
+        navigate("/logbooks");
+      }
+    } catch (error: unknown) {
+      toast.error("Error al enviar el formulario" + error);
+    } finally {
+      setLoadingLocation(false);
+    }
+  };
 
   return (
     <section className={styles.container}>
+      <Toaster position="top-right" />
       <nav aria-label="¨Progress" className={styles.steps_navigation}>
         <ol className={styles.steps_item}>
           {steps.map((s) => (
@@ -108,6 +171,7 @@ const CreateLogbookForm: React.FC = () => {
                 type="date"
                 id="date"
                 className={styles.input}
+                defaultValue={new Date().toISOString().split("T")[0]}
                 {...register("date", { required: true })}
                 {...(errors.date && (
                   <span className="error">Este campo es requerido</span>
@@ -129,8 +193,20 @@ const CreateLogbookForm: React.FC = () => {
                     <span className="error">Este campo es requerido</span>
                   ))}
                 />
-                <button className={styles.button}>
-                  <MapPin />
+                <button
+                  type="button"
+                  className={styles.button}
+                  onClick={() => {
+                    setLoadingLocation(true);
+                    requestLocation();
+                  }}
+                  disabled={loadingLocation}
+                >
+                  {loadingLocation ? (
+                    <Loader className={styles.loader} />
+                  ) : (
+                    <MapPin />
+                  )}
                 </button>
               </div>
             </div>
@@ -156,7 +232,11 @@ const CreateLogbookForm: React.FC = () => {
           <div className={styles.step}>
             <div className={styles.weather_info}>
               <h2 className={styles.subtitle}>Información del cima</h2>
-              <button className={styles.button}>
+              <button
+                type="button"
+                className={styles.button}
+                onClick={requestLocation}
+              >
                 <CloudSun />
                 Cargar clima
               </button>
@@ -226,6 +306,7 @@ const CreateLogbookForm: React.FC = () => {
                 <input
                   type="date"
                   id="samplingTime"
+                  defaultValue={new Date().toISOString().split("T")[0]}
                   className={styles.input}
                   {...register("weather.samplingTime", { required: true })}
                   {...(errors.weather?.samplingTime && (
@@ -461,11 +542,14 @@ const CreateLogbookForm: React.FC = () => {
                   </div>
                   <div className={styles.photos_grid}>
                     {watch(`collectedSpecies.${index}.photos`)?.map(
-                      (file, fileIndex) => (
-                        <div key={file.name} style={{ position: "relative" }}>
+                      (photo, fileIndex) => (
+                        <div
+                          key={photo.file?.name}
+                          style={{ position: "relative" }}
+                        >
                           <img
-                            src={URL.createObjectURL(file)}
-                            alt={`Preview ${file.name}`}
+                            src={photo.url}
+                            alt={`Preview ${photo.url}`}
                             className={styles.preview}
                           />
                           <button

@@ -97,7 +97,7 @@ const ListLogbook = () => {
               commonName={logbook.collectedSpecies[0].commonName}
               date={logbook.date.toString()}
               humidity={logbook.weather.humidity}
-              sampleImage={logbook.images[0].url}
+              //sampleImage={logbook.images[0].url}
               scientificName={logbook.collectedSpecies[0].scientificName ?? ""}
               temperature={logbook.weather.temperature}
               weatherType={logbook.weather.weatherType}

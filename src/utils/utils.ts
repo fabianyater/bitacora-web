@@ -12,3 +12,19 @@ export const getHeaderOptions = (token?: string) => ({
     Authorization: `Bearer ${token}`,
   },
 });
+
+export const geolocationOptions = {
+  enableHighAccuracy: true,
+  timeout: 1000 * 60 * 1,
+  maximumAge: 1000 * 3600 * 24,
+};
+
+
+export const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+};

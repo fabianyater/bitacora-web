@@ -22,6 +22,11 @@ export type HabitatDescription = {
   notes?: string;
 };
 
+interface Photo {
+  url: string;
+  file?: File;
+}
+
 export type SamplingSiteImage = {
   url: string;
   description?: string;
@@ -35,7 +40,7 @@ export type CollectedSpecies = {
   family?: string;
   sampleQuantity: number;
   plantStatus: string;
-  photos: File[];
+  photos: Photo[];
 };
 
 export interface ILogBook {

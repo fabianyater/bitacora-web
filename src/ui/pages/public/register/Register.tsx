@@ -38,7 +38,7 @@ export const RegisterPage = () => {
     {
       id: 2,
       value: "partner",
-      name: "Compañero",
+      name: "Colaborador",
     },
   ];
 

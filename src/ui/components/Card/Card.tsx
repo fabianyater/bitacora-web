@@ -11,7 +11,7 @@ interface BotanicCardProps {
   humidity: number;
   commonName: string;
   scientificName: string;
-  sampleImage: string;
+  sampleImage?: string;
   path: string;
 }
 
