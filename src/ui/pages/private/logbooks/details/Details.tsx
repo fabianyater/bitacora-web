@@ -118,14 +118,16 @@ const Details = () => {
           {logbook.collectedSpecies.map((species) => (
             <div key={species.scientificName} className={styles.speciesCard}>
               <div className={styles.photosContainer}>
-                {species.photos.map((photo) => (
-                  <img
-                    key={photo.url}
-                    src={photo}
-                    alt={`Imagen de ${species.scientificName}`}
-                    className={styles.speciesPhoto}
-                  />
-                ))}
+                {species.photos
+                  ? species.photos.map((photo) => (
+                      <img
+                        key={photo.url}
+                        src={photo}
+                        alt={`Imagen de ${species.scientificName}`}
+                        className={styles.speciesPhoto}
+                      />
+                    ))
+                  : null}
               </div>
               <div className={styles.speciesInfo}>
                 <h2 className={styles.speciesName}>
