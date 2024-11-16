@@ -1,4 +1,4 @@
-import { Plus, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../../../../../hooks/useAuth";
@@ -24,6 +24,9 @@ const ListLogbook = () => {
     climate: "",
     sortBy: "date",
   });
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [size, setSize] = useState<number>(20);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -35,13 +38,23 @@ const ListLogbook = () => {
     }));
   };
 
+  const getPaginatedLogBooks = async (
+    token: string,
+    page: number,
+    size: number
+  ) => {
+    const response = await getAllLogbooks(token, page, size, "date");
+    setLogbooks(response.content);
+    setTotalPages(response.totalPages);
+    setCurrentPage(response.pageNumber);
+  };
+
   useEffect(() => {
     const fetchLogbooks = async () => {
       try {
         setLoading(true);
         if (auth.token) {
-          const response = await getAllLogbooks(auth.token, 1, 10, "date");
-          setLogbooks(response.content);
+          await getPaginatedLogBooks(auth.token, currentPage, size);
         }
       } catch (error) {
         console.error("Error fetching logbooks:", error);
@@ -51,9 +64,16 @@ const ListLogbook = () => {
     };
 
     fetchLogbooks();
-  }, [auth.token]);
+  }, [auth.token, currentPage, size]);
 
-  if (loading) return <LoadingPage text="Cargando Bitácoras" />;
+  const handlePageChange = async (page: number) => {
+    setLoading(true);
+    if (auth.token) {
+      await getPaginatedLogBooks(auth.token, page, size);
+    }
+    setLoading(false);
+  };
+
   if (!logbooks.length) return <h1>No hay bitácoras disponibles</h1>;
 
   return (
@@ -103,6 +123,36 @@ const ListLogbook = () => {
               weatherType={logbook.weather.weatherType}
             />
           ))}
+        </div>
+        <div className={styles.pagination}>
+          <button
+            className={styles.button}
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            <ChevronLeft />
+            Anterior
+          </button>
+          {totalPages > 1 &&
+            [...Array(totalPages)].map((_, i) => (
+              <button
+                key={i}
+                onClick={() => handlePageChange(i + 1)}
+                className={`${styles.button} ${
+                  i + 1 === currentPage ? styles.active : styles.inactive
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          <button
+            disabled={currentPage === totalPages}
+            className={styles.button}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Siguiente
+            <ChevronRight />
+          </button>
         </div>
       </section>
     </section>
