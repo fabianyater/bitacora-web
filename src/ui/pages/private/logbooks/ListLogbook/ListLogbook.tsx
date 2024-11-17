@@ -93,6 +93,30 @@ const ListLogbook = () => {
     setLoading(false);
   };
 
+  const hasPermission = (
+    permissions:
+      | Array<{ functionName: string; permissions: string[] }>
+      | undefined,
+    functionName: string,
+    requiredPermission: "read" | "write" | "delete" | "update"
+  ) => {
+    if (!permissions) {
+      console.warn("Permissions are undefined or null");
+      return false;
+    }
+
+    const functionPermissions = permissions.find(
+      (perm) => perm.functionName === functionName
+    );
+
+    if (!functionPermissions) {
+      console.warn(`Function ${functionName} not found in permissions`);
+      return false;
+    }
+
+    return functionPermissions.permissions.includes(requiredPermission);
+  };
+
   return (
     <section className={styles.wrapper}>
       <header className={styles.header}>
@@ -134,12 +158,15 @@ const ListLogbook = () => {
         <div className={styles.title}>
           <h1 className={styles.title}>Centro de Bitácoras</h1>
 
-          <Link to="/logbooks/new">
-            <button className={styles.newButton}>
-              <Plus />
-              Nueva Bitácora
-            </button>
-          </Link>
+          {auth.permissions &&
+            hasPermission(auth.permissions, "agregar bitacora", "write") && (
+              <Link to="/logbooks/new">
+                <button className={styles.newButton}>
+                  <Plus />
+                  Nueva Bitácora
+                </button>
+              </Link>
+            )}
         </div>
         {loading && <LoadingPage text="Cargando Bitácoras" />}
         {!loading && logbooks.length === 0 && (

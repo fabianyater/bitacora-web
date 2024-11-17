@@ -25,6 +25,11 @@ export const LoginPage = () => {
           role: response.role,
           username: response.username,
           expirationTime: response.expirationTime,
+          permissions: response.permissions
+            ? Array.isArray(response.permissions)
+              ? response.permissions
+              : [response.permissions]
+            : [],
         };
 
         setAuth(updateAuth);

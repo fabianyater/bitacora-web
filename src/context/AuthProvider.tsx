@@ -8,12 +8,18 @@ import {
   useState,
 } from "react";
 
+export type Permission = "agregar bitacora";
+
 interface AuthState {
   token?: string;
   userId?: string;
   role?: string;
   username?: string;
   expirationTime?: number;
+  permissions?: Array<{
+    functionName: string;
+    permissions: Array<"read" | "write" | "delete" | "update">;
+  }>;
   [key: string]: unknown;
 }
 

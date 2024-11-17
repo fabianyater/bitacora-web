@@ -18,6 +18,10 @@ interface AuthResponse {
   role: string;
   username: string;
   expirationTime?: number;
+  permissions?: {
+    functionName: string;
+    permissions: Array<"read" | "write" | "delete" | "update">;
+  };
 }
 
 const authenticate = async (data: AuthData): Promise<AuthResponse> => {
@@ -40,4 +44,3 @@ const validateToken = async (token: string): Promise<number> => {
 };
 
 export { authenticate, validateToken };
-

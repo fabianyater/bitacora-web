@@ -71,6 +71,31 @@ const CreateLogbookForm: React.FC = () => {
     [setValue, watch]
   );
 
+  const hasPermission = (
+    permissions:
+      | Array<{ functionName: string; permissions: string[] }>
+      | undefined,
+    functionName: string,
+    requiredPermission: "read" | "write" | "delete" | "update"
+  ) => {
+    if (!permissions) return false;
+
+    const functionPermissions = permissions.find(
+      (perm) => perm.functionName.toLowerCase() === functionName.toLowerCase()
+    );
+
+    return (
+      functionPermissions?.permissions.includes(requiredPermission) ?? false
+    );
+  };
+
+  useEffect(() => {
+    if (!hasPermission(auth.permissions, "agregar bitacora", "write")) {
+      toast.error("No tienes permisos para acceder a esta página");
+      navigate("/", { replace: true }); 
+    }
+  }, [auth.permissions, navigate]);
+
   useEffect(() => {
     if (location) {
       const { latitude, longitude } = location;
