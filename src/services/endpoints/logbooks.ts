@@ -35,8 +35,7 @@ const filterLogbooks = async (
   token: string,
   startDate: string,
   endDate: string,
-  latitude: number,
-  longitude: number,
+  location: string,
   habitatType: string,
   climate: string,
   order: string
@@ -45,8 +44,7 @@ const filterLogbooks = async (
     routes.LOGBOOK.FILTER(
       startDate,
       endDate,
-      latitude,
-      longitude,
+      location,
       habitatType,
       climate,
       order
@@ -86,6 +84,8 @@ const getLogbookById = async (
 export {
   addLogBook,
   filterLogbooks,
-  getAllLogbooks, getLogbookById, searchLogbooks
+  getAllLogbooks,
+  getLogbookById,
+  searchLogbooks
 };
 

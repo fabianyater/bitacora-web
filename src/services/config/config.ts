@@ -30,13 +30,12 @@ const LOGBOOK = {
   FILTER: (
     startDate: string,
     endDate: string,
-    latitude: number,
-    longitude: number,
+    location: string,
     habitatType: string,
     climate: string,
     order: string
   ): string =>
-    `${API_ROUTES.LOGBOOKS}/filter?startDate=${startDate}&endDate=${endDate}&latitude=${latitude}&longitude=${longitude}&habitatType=${habitatType}&climate=${climate}&order=${order}`,
+    `${API_ROUTES.LOGBOOKS}/filter?startDate=${startDate}&endDate=${endDate}&location=${location}&habitatType=${habitatType}&climate=${climate}&order=${order}`,
   GET_LOGBOOKS: (page: number, limit: number, order: string): string =>
     `${API_ROUTES.LOGBOOKS}?page=${page}&limit=${limit}&order=${order}`,
   GET_LOGBOOK_BY_ID: (logbookId: string): string =>
@@ -49,7 +48,7 @@ const PERMISSIONS = {
 
 const AUTH = {
   LOGIN: (): string => `${API_ROUTES.AUTH}/login`,
-  VALIDATE_TOKEN : () => `${API_ROUTES.AUTH}/validateToken`
+  VALIDATE_TOKEN: () => `${API_ROUTES.AUTH}/validateToken`,
 };
 
 const exportedObject = {

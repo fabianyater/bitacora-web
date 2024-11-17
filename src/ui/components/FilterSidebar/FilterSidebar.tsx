@@ -1,6 +1,6 @@
-import React from "react";
+import { FilterIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
 import Input from "../Input/Input";
-import Select from "../Select/Select";
 import styles from "./styles.module.css";
 
 export type FilterOptions = {
@@ -13,79 +13,68 @@ export type FilterOptions = {
   sortBy: "date" | "location" | "relevance";
 };
 
-export type FilterSidebarProps = {
-  filters: FilterOptions;
-  onFilterChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => void;
+type FilterSidebarProps = {
+  onFilter: (filters: FilterOptions) => void;
 };
 
-const FilterSidebar: React.FC<FilterSidebarProps> = ({
-  filters,
-  onFilterChange,
-}) => {
+const FilterSidebar: React.FC<FilterSidebarProps> = ({ onFilter }) => {
+  const { register, handleSubmit } = useForm<FilterOptions>();
+
+  const handleFilter = (data: FilterOptions) => {
+    onFilter(data);
+  };
+
   return (
-    <section className={styles.sidebar}>
-      <Input
-        label="Fecha de inicio"
-        type="date"
-        name="startDate"
-        value={filters.startDate}
-        onChange={onFilterChange}
-        className={styles.dateInput}
-      />
+    <form className={styles.form} onSubmit={handleSubmit(handleFilter)}>
+      <section className={styles.sidebar}>
+        <Input
+          label="Fecha de inicio"
+          type="date"
+          name="startDate"
+          register={register}
+          className={styles.dateInput}
+        />
 
-      <Input
-        label="Fecha de fin"
-        type="date"
-        name="endDate"
-        value={filters.endDate}
-        onChange={onFilterChange}
-        className={styles.dateInput}
-      />
+        <Input
+          label="Fecha de fin"
+          type="date"
+          name="endDate"
+          register={register}
+          className={styles.dateInput}
+        />
 
-      <Input
-        label="Ubicación"
-        type="text"
-        name="location"
-        value={filters.location}
-        onChange={onFilterChange}
-        className={styles.textInput}
-        placeholder="Ciudad, región..."
-      />
+        <Input
+          label="Ubicación"
+          type="text"
+          name="location"
+          register={register}
+          className={styles.textInput}
+          placeholder="Ciudad, región..."
+        />
 
-      <Input
-        label="Tipo de hábitat"
-        type="text"
-        name="habitatType"
-        value={filters.habitatType}
-        onChange={onFilterChange}
-        className={styles.textInput}
-        placeholder="Bosque, desierto..."
-      />
+        <Input
+          label="Tipo de hábitat"
+          type="text"
+          name="habitatType"
+          register={register}
+          className={styles.textInput}
+          placeholder="Bosque, desierto..."
+        />
 
-      <Input
-        label="Clima"
-        type="text"
-        name="climate"
-        value={filters.climate}
-        onChange={onFilterChange}
-        className={styles.textInput}
-        placeholder="Cálido, frío..."
-      />
+        <Input
+          label="Clima"
+          type="text"
+          name="climate"
+          register={register}
+          className={styles.textInput}
+          placeholder="Cálido, frío..."
+        />
 
-      <Select
-        label="Ordenar por"
-        name="sortBy"
-        value={filters.sortBy}
-        onChange={onFilterChange}
-        options={[
-          { label: "Fecha", value: "date" },
-          { label: "Ubicación", value: "location" },
-          { label: "Relevancia", value: "relevance" },
-        ]}
-      />
-    </section>
+        <button type="submit" className={styles.button}>
+          <FilterIcon />
+        </button>
+      </section>
+    </form>
   );
 };
 
