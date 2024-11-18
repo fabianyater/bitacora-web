@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../../hooks/useAuth";
 import { validateToken } from "../../../services/endpoints/auth";
 import styles from "./UserStyles.module.css";
+import { Menu } from "lucide-react";
 
 type UserLayoutPropsType = {
   children?: ReactNode;
@@ -12,6 +13,7 @@ type UserLayoutPropsType = {
 export const UserLayout = ({ children }: UserLayoutPropsType) => {
   const { auth, setExpiredSession, logout } = useAuthContext();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
+  const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState<boolean>(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -25,6 +27,10 @@ export const UserLayout = ({ children }: UserLayoutPropsType) => {
 
   const closeUserMenu = () => {
     setIsUserMenuOpen(false);
+  };
+
+  const toggleBurgerMenu = () => {
+    setIsBurgerMenuOpen(!isBurgerMenuOpen);
   };
 
   useEffect(() => {
@@ -75,9 +81,12 @@ export const UserLayout = ({ children }: UserLayoutPropsType) => {
     <div className={styles.wrapper}>
       <header className={styles.header}>
         <Link to="/" className={styles.logo}>
-          🌿 BiBo
+          🌿BiBo
         </Link>
-        <nav className={styles.nav}>
+        <button className={styles.burgerMenu} onClick={toggleBurgerMenu}>
+          <Menu />
+        </button>
+        <nav className={`${styles.nav} ${isBurgerMenuOpen ? styles.open : ""}`}>
           <ul className={styles.list}>
             <li>
               <Link to="/logbooks">Bitácoras</Link>
