@@ -21,6 +21,7 @@ const ListLogbook = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [size, setSize] = useState<number>(20);
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
 

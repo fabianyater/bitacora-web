@@ -122,7 +122,7 @@ const Details = () => {
                   ? species.photos.map((photo) => (
                       <img
                         key={photo.url}
-                        src={photo}
+                        src={photo as unknown as string}
                         alt={`Imagen de ${species.scientificName}`}
                         className={styles.speciesPhoto}
                       />
