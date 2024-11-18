@@ -103,7 +103,9 @@ export const UserLayout = ({ children }: UserLayoutPropsType) => {
               <div className={styles.userMenu}>
                 <span className={styles.userInfo}>{auth.username}</span>
                 <span className={styles.userRole}>{mapRole(auth.role)}</span>
-                <button onClick={closeUserMenu}>Perfil</button>
+                <Link to={"/profile"}>
+                  <button onClick={closeUserMenu}>Perfil</button>
+                </Link>
                 <button
                   onClick={() => {
                     closeUserMenu();

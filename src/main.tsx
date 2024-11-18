@@ -11,6 +11,7 @@ import CreateLogBookPage from "./ui/pages/private/logbooks/create/CreateLogBookP
 import Details from "./ui/pages/private/logbooks/details/Details.tsx";
 import ListLogbook from "./ui/pages/private/logbooks/ListLogbook/ListLogbook.tsx";
 import { LogBookPage } from "./ui/pages/private/logbooks/LogBookPage.tsx";
+import ProfilePage from "./ui/pages/private/profile/ProfilePage.tsx";
 import { LoginPage } from "./ui/pages/public/login/LoginPage.tsx";
 import { RegisterPage } from "./ui/pages/public/register/Register.tsx";
 
@@ -68,6 +69,14 @@ createRoot(document.getElementById("root")!).render(
               element={
                 <PrivateRoute allowedRoles={["researcher", "partner"]}>
                   <LocationsPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute allowedRoles={["researcher", "partner", "admin"]}>
+                  <ProfilePage />
                 </PrivateRoute>
               }
             />
