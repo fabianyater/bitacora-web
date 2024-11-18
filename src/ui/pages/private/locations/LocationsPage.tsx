@@ -14,6 +14,7 @@ import {
   getLocations,
   ILocation,
 } from "../../../../services/endpoints/logbooks";
+import styles from "./styles.module.css";
 
 import "leaflet/dist/leaflet.css";
 import MarkerClusterGroup from "react-leaflet-cluster";
@@ -60,11 +61,11 @@ export const LocationsPage = () => {
   if (isLoading) return <h1>Cargando mapa...</h1>;
 
   return (
-    <div>
+    <div className={styles.container}>
       <Toaster position="top-right" />
       <h1 style={{ margin: "20px 0" }}>Mapa de ubicaciones</h1>
       <MapContainer
-        style={{ height: "500px", width: "100%" }}
+        className={styles.map}
         zoom={2}
         maxZoom={18}
         minZoom={2}
