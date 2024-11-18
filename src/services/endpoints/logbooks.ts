@@ -81,9 +81,11 @@ const getLogbookById = async (
   return response.data;
 };
 
-type ILocation = {
+export type ILocation = {
   latitude: number;
   longitude: number;
+  city: string;
+  logBookId: string;
 };
 
 const getLocations = async (
