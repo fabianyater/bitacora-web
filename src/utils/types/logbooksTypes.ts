@@ -64,6 +64,7 @@ export interface LogbookRequest {
   images: SamplingSiteImage[];
   collectedSpecies: CollectedSpecies[];
   additionalObservations: string;
+  createdBy: string;
 }
 
 export interface SearchCriterias {

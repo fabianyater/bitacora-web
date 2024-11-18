@@ -83,7 +83,7 @@ export const UserLayout = ({ children }: UserLayoutPropsType) => {
               <Link to="/logbooks">Bitácoras</Link>
             </li>
             <li>
-              <Link to="locations">Ubicaciones</Link>
+              <Link to="/locations">Ubicaciones</Link>
             </li>
           </ul>
           <div className={styles.user} ref={userMenuRef}>

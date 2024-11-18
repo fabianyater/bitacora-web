@@ -40,6 +40,7 @@ const LOGBOOK = {
     `${API_ROUTES.LOGBOOKS}?page=${page}&limit=${limit}&order=${order}`,
   GET_LOGBOOK_BY_ID: (logbookId: string): string =>
     `${API_ROUTES.LOGBOOKS}/${logbookId}`,
+  GET_LOCATIONS: () => `${API_ROUTES.LOGBOOKS}/locations`,
 };
 
 const PERMISSIONS = {

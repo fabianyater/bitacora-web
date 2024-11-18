@@ -92,7 +92,7 @@ const CreateLogbookForm: React.FC = () => {
   useEffect(() => {
     if (!hasPermission(auth.permissions, "agregar bitacora", "write")) {
       toast.error("No tienes permisos para acceder a esta página");
-      navigate("/", { replace: true }); 
+      navigate("/", { replace: true });
     }
   }, [auth.permissions, navigate]);
 
@@ -126,10 +126,15 @@ const CreateLogbookForm: React.FC = () => {
     try {
       if (!auth.token) throw new Error("No hay token de autenticación");
 
-      const response = await addLogBook(auth.token, data);
-      if (response === 201) {
-        toast.success("Bitácora creada exitosamente");
-        navigate("/logbooks");
+      if (auth.userId) {
+        const response = await addLogBook(auth.token, {
+          ...data,
+          createdBy: auth.userId,
+        });
+        if (response === 201) {
+          toast.success("Bitácora creada exitosamente");
+          navigate("/logbooks");
+        }
       }
     } catch (error: unknown) {
       toast.error("Error al enviar el formulario" + error);

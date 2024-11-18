@@ -21,6 +21,7 @@ export const LoginPage = () => {
 
       if (response.token && response.role && response.username) {
         const updateAuth = {
+          userId: response.userId,
           token: response.token,
           role: response.role,
           username: response.username,

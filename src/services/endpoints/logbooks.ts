@@ -81,10 +81,29 @@ const getLogbookById = async (
   return response.data;
 };
 
+type ILocation = {
+  latitude: number;
+  longitude: number;
+};
+
+const getLocations = async (
+  token: string,
+  userId: string
+): Promise<ILocation[]> => {
+  const response = await api.post<ILocation[]>(
+    routes.LOGBOOK.GET_LOCATIONS(),
+    { userId },
+    getHeaderOptions(token)
+  );
+
+  return response.data;
+};
+
 export {
   addLogBook,
   filterLogbooks,
   getAllLogbooks,
+  getLocations,
   getLogbookById,
   searchLogbooks
 };

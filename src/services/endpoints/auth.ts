@@ -14,6 +14,7 @@ export interface AuthData {
 }
 
 interface AuthResponse {
+  userId: string;
   token: string;
   role: string;
   username: string;
