@@ -10,7 +10,8 @@ export const getHeaderOptions = (token?: string) => ({
   headers: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
-    "Access-Control-Allow-Origin": "*"
+    "Access-Control-Allow-Origin": "*",
+    withCredentials: true,
   },
 });
 
